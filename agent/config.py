@@ -30,6 +30,18 @@ class Config:
     # AI/LLM
     anthropic_api_key: str = field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""))
     openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
+    claude_model: str = field(
+        default_factory=lambda: os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-20241022")
+    )
+    claude_max_tokens: int = field(
+        default_factory=lambda: int(os.getenv("CLAUDE_MAX_TOKENS", "4096"))
+    )
+    claude_temperature: float = field(
+        default_factory=lambda: float(os.getenv("CLAUDE_TEMPERATURE", "0.7"))
+    )
+    max_conversation_history: int = field(
+        default_factory=lambda: int(os.getenv("MAX_CONVERSATION_HISTORY", "50"))
+    )
 
     # GitHub
     github_token: str = field(default_factory=lambda: os.getenv("GITHUB_TOKEN", ""))
@@ -103,6 +115,10 @@ class Config:
             "slack_bot_token": self._mask_secret(self.slack_bot_token),
             "anthropic_api_key": self._mask_secret(self.anthropic_api_key),
             "openai_api_key": self._mask_secret(self.openai_api_key),
+            "claude_model": self.claude_model,
+            "claude_max_tokens": self.claude_max_tokens,
+            "claude_temperature": self.claude_temperature,
+            "max_conversation_history": self.max_conversation_history,
             "github_token": self._mask_secret(self.github_token),
             "github_org": self.github_org,
             "worker_pool_size": self.worker_pool_size,

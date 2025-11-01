@@ -543,6 +543,7 @@ All configuration via environment variables (see `.env.sample`):
 - **Docker Setup**: See `DOCKER_SETUP.md` 🐳 (Self-hosted with Docker)
 - **TigerData Cloud**: See `TIGERDATA_SETUP.md` ☁️ (Managed cloud database)
 - **Slack Integration**: See `SLACK_SETUP.md` 💬 (Connect to Slack workspace)
+- **Agent Setup**: See `AGENT_SETUP.md` 🤖 (Claude AI integration and running the agent)
 
 ## Acknowledgments
 
@@ -577,10 +578,12 @@ For issues and questions:
   - [x] Historical import
   - [x] User/channel sync
   - [x] Real-time event processing
-- [ ] Phase 3: Agent Core
-  - [ ] LLM integration (Claude)
-  - [ ] Prompt templates
-  - [ ] Agent logic
+- [x] **Phase 3: Agent Core** (✅ Complete)
+  - [x] LLM integration (Claude)
+  - [x] Prompt templates (Jinja2)
+  - [x] Agent orchestration logic
+  - [x] Conversation context retrieval
+  - [x] Main entry point (athenaeum.py)
 - [ ] Phase 4: MCP Servers
   - [ ] Slack MCP
   - [ ] GitHub MCP
@@ -596,15 +599,23 @@ For issues and questions:
 
 ## Version
 
-**v0.2.0** - Slack Integration Release (2025-11-01)
+**v0.3.0** - Agent Core Release (2025-11-01)
 
-- **Phase 2 Complete**: Full Slack integration
+- **Phase 3 Complete**: Intelligent AI agent with Claude
+  - Claude API integration with retry logic
+  - Conversation context retrieval from TimescaleDB
+  - Jinja2 prompt templating system
+  - Agent orchestration and decision loop
+  - Main entry point (athenaeum.py)
+  - Streaming response support
+  - Complete end-to-end flow
+- **Phase 2 Features**: Full Slack integration
   - Socket Mode real-time connection
   - Message ingestion to TimescaleDB
   - User/channel metadata sync
   - Historical message import
   - Reaction tracking
-- **Phase 1 Features**:
+- **Phase 1 Features**: Production-grade foundation
   - Event processor with atomic claiming
   - Worker pool with bounded concurrency
   - Database models and migrations
@@ -612,4 +623,4 @@ For issues and questions:
 - **Deployment Options**:
   - Docker self-hosted setup
   - TigerData Cloud integration
-- **Documentation**: 200+ pages across 6 comprehensive guides
+- **Documentation**: 260+ pages across 7 comprehensive guides

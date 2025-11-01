@@ -1,0 +1,16 @@
+{% if conversation_history %}
+## Conversation History
+
+{% for message in conversation_history %}
+**{{ message.user_name }}** ({{ message.timestamp }}):
+{{ message.text }}
+
+{% endfor %}
+{% endif %}
+
+## Current Message
+
+**{{ user_name }}** asks:
+{{ current_message }}
+
+Please provide a helpful response.
