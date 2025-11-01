@@ -96,15 +96,35 @@ PostgreSQL with pgvector for semantic search:
 
 ## Quick Start
 
+### Two Setup Options
+
+**Option 1: TigerData Cloud** (Recommended - Production-Ready) 🚀
+- Managed TimescaleDB optimized for AI agents
+- 30-day free trial (no credit card required)
+- Automatic compression, backups, and scaling
+- Built-in pgvector for semantic search
+- Tiger CLI MCP server for AI assistance
+
+👉 **[See TigerData Setup Guide](TIGERDATA_SETUP.md)** for complete instructions
+
+**Option 2: Local Development**
+- Self-hosted PostgreSQL/TimescaleDB
+- Full control over infrastructure
+- Good for development and testing
+
+Instructions below are for Option 2 (local). For TigerData, see the [setup guide](TIGERDATA_SETUP.md).
+
+---
+
 ### Prerequisites
 
 - Python 3.11+
-- PostgreSQL 14+ (or TimescaleDB)
+- PostgreSQL 14+ or TimescaleDB (local) OR TigerData account (cloud)
 - Docker (optional, for local development)
 - Slack workspace with bot permissions
 - Anthropic API key
 
-### Installation
+### Installation (Local Development)
 
 1. **Clone the repository**:
 
@@ -511,6 +531,7 @@ All configuration via environment variables (see `.env.sample`):
 - **Architecture**: See `ARCHITECTURE_ANALYSIS.md`
 - **Implementation Plan**: See `IMPLEMENTATION_PLAN.md`
 - **Testing Strategy**: See `TESTING_STRATEGY.md`
+- **TigerData Integration**: See `TIGERDATA_SETUP.md` ⭐ (Production database setup)
 
 ## Acknowledgments
 
