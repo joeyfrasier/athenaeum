@@ -1,0 +1,63 @@
+{
+  "display_information": {
+    "name": "Athenaeum",
+    "description": "A temple of knowledge for AI agents - your intelligent Slack assistant powered by Claude",
+    "background_color": "#1a1a2e",
+    "long_description": "Athenaeum is a production-ready AI agent that brings the wisdom of Minerva to your Slack workspace. Ask questions, search documentation, retrieve code examples, and get intelligent assistance - all backed by PostgreSQL/TimescaleDB for reliable conversation memory."
+  },
+  "features": {
+    "app_home": {
+      "home_tab_enabled": true,
+      "messages_tab_enabled": true,
+      "messages_tab_read_only_enabled": false
+    },
+    "bot_user": {
+      "display_name": "Athenaeum",
+      "always_online": true
+    }
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "app_mentions:read",
+        "channels:history",
+        "channels:read",
+        "chat:write",
+        "groups:history",
+        "groups:read",
+        "im:history",
+        "im:read",
+        "im:write",
+        "mpim:history",
+        "mpim:read",
+        "reactions:read",
+        "users:read",
+        "users:read.email"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "bot_events": [
+        "app_mention",
+        "message.channels",
+        "message.groups",
+        "message.im",
+        "message.mpim",
+        "reaction_added",
+        "reaction_removed",
+        "user_change",
+        "channel_created",
+        "channel_deleted",
+        "channel_archive",
+        "channel_unarchive"
+      ]
+    },
+    "interactivity": {
+      "is_enabled": false
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": true,
+    "token_rotation_enabled": false
+  }
+}

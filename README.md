@@ -542,6 +542,7 @@ All configuration via environment variables (see `.env.sample`):
 - **Testing Strategy**: See `TESTING_STRATEGY.md`
 - **Docker Setup**: See `DOCKER_SETUP.md` 🐳 (Self-hosted with Docker)
 - **TigerData Cloud**: See `TIGERDATA_SETUP.md` ☁️ (Managed cloud database)
+- **Slack Integration**: See `SLACK_SETUP.md` 💬 (Connect to Slack workspace)
 
 ## Acknowledgments
 
@@ -566,14 +567,16 @@ For issues and questions:
 
 ## Roadmap
 
-- [ ] Phase 1: Foundation (✅ Complete)
+- [x] **Phase 1: Foundation** (✅ Complete)
   - [x] Database layer with event processor
   - [x] Worker pool with bounded concurrency
   - [x] Configuration management
-- [ ] Phase 2: Slack Integration
-  - [ ] Socket Mode connection
-  - [ ] Message ingestion
-  - [ ] Historical import
+- [x] **Phase 2: Slack Integration** (✅ Complete)
+  - [x] Socket Mode connection
+  - [x] Message ingestion
+  - [x] Historical import
+  - [x] User/channel sync
+  - [x] Real-time event processing
 - [ ] Phase 3: Agent Core
   - [ ] LLM integration (Claude)
   - [ ] Prompt templates
@@ -593,10 +596,20 @@ For issues and questions:
 
 ## Version
 
-**v0.1.0** - Foundation Release (2025-11-01)
+**v0.2.0** - Slack Integration Release (2025-11-01)
 
-- Event processor with atomic claiming
-- Worker pool with bounded concurrency
-- Database models and migrations
-- Configuration management
-- Comprehensive documentation
+- **Phase 2 Complete**: Full Slack integration
+  - Socket Mode real-time connection
+  - Message ingestion to TimescaleDB
+  - User/channel metadata sync
+  - Historical message import
+  - Reaction tracking
+- **Phase 1 Features**:
+  - Event processor with atomic claiming
+  - Worker pool with bounded concurrency
+  - Database models and migrations
+  - Configuration management
+- **Deployment Options**:
+  - Docker self-hosted setup
+  - TigerData Cloud integration
+- **Documentation**: 200+ pages across 6 comprehensive guides
