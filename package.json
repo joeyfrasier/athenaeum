@@ -1,7 +1,7 @@
 {
-  "name": "production-agent-mcp-servers",
+  "name": "athenaeum-mcp-servers",
   "version": "1.0.0",
-  "description": "MCP servers for production agent system",
+  "description": "MCP servers for Athenaeum - A temple of knowledge for AI agents",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -12,11 +12,14 @@
     "inspector": "npx @modelcontextprotocol/inspector"
   },
   "keywords": [
+    "athenaeum",
+    "minerva",
     "mcp",
     "ai",
     "agent",
     "slack",
-    "github"
+    "github",
+    "knowledge"
   ],
   "author": "",
   "license": "Apache-2.0",

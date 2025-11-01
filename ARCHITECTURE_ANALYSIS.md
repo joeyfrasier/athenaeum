@@ -1,8 +1,10 @@
-# Production Agent System - Architecture Analysis
+# Athenaeum - Architecture Analysis
+
+> **Athenaeum**: A temple of knowledge for AI agents
 
 ## Executive Summary
 
-TigerData's production agent system (Eon) is a Slack-native AI assistant built on PostgreSQL/TimescaleDB as the foundation ("Agentic Postgres"). The system achieved 50% daily active usage within 6 weeks through enterprise-grade reliability, durable event processing, and contextual conversation memory.
+This document analyzes TigerData's production agent system (Eon), which serves as the architectural foundation for **Athenaeum**. Eon is a Slack-native AI assistant built on PostgreSQL/TimescaleDB as the foundation ("Agentic Postgres"). The system achieved 50% daily active usage within 6 weeks through enterprise-grade reliability, durable event processing, and contextual conversation memory.
 
 ## System Architecture
 

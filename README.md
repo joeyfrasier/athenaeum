@@ -1,6 +1,8 @@
-# Production Agent System
+# Athenaeum
 
-A production-ready AI agent system based on TigerData's open-source architecture, featuring exactly-once event processing, PostgreSQL-backed durability, and modular MCP server integration.
+**A temple of knowledge for AI agents** - Production-ready agent system based on TigerData's open-source architecture, featuring exactly-once event processing, PostgreSQL-backed durability, and modular MCP server integration.
+
+> Named after Minerva's temple, historically representing a place of learning and intellectual pursuit.
 
 ## Overview
 
@@ -107,8 +109,8 @@ PostgreSQL with pgvector for semantic search:
 1. **Clone the repository**:
 
 ```bash
-git clone https://github.com/your-org/blank-app.git
-cd blank-app
+git clone https://github.com/your-org/athenaeum.git
+cd athenaeum
 ```
 
 2. **Install Python dependencies**:
@@ -193,7 +195,7 @@ pool.run_forever()  # Blocks until shutdown signal
 ## Project Structure
 
 ```
-blank-app/
+athenaeum/
 ├── agent/                      # Core agent framework
 │   ├── __init__.py
 │   ├── event_processor.py     # Atomic event claiming
@@ -528,7 +530,7 @@ Apache 2.0 - See `LICENSE` file for details.
 ## Support
 
 For issues and questions:
-- GitHub Issues: [github.com/your-org/blank-app/issues](https://github.com/your-org/blank-app/issues)
+- GitHub Issues: [github.com/your-org/athenaeum/issues](https://github.com/your-org/athenaeum/issues)
 - Documentation: See `docs/` directory
 
 ## Roadmap
