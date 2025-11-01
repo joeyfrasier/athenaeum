@@ -1,5 +1,18 @@
 .streamlit/secrets.toml
 
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Docker volumes and data
+docker/pgdata/
+docker/pgadmin_data/
+*.sql
+*.sql.gz
+backup_*.sql*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

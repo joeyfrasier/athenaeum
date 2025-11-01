@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # TimescaleDB - Production-ready time-series database
+  # Same database that powers TigerData Cloud, but self-hosted
+  timescaledb:
+    image: timescale/timescaledb-ha:pg17-latest
+    container_name: athenaeum-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tsdbadmin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: tsdb
+      # Enable TimescaleDB extension by default
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=en_US.utf8"
+      # Tuning for development (adjust for production)
+      TS_TUNE_MAX_CONNS: 100
+      TS_TUNE_MAX_BG_WORKERS: 8
+      TS_TUNE_MEMORY: 2GB
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persistent data
+      - timescaledb_data:/home/postgres/pgdata/data
+      # Initialize with our schema
+      - ./migrations:/docker-entrypoint-initdb.d
+      # Custom PostgreSQL config (optional)
+      # - ./docker/postgresql.conf:/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tsdbadmin -d tsdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - athenaeum-network
+
+  # pgAdmin - Web-based database management (optional)
+  # Access at http://localhost:5050
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: athenaeum-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@athenaeum.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      # Pre-configured server connection
+      - ./docker/pgadmin-servers.json:/pgadmin4/servers.json
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    networks:
+      - athenaeum-network
+    profiles:
+      - tools  # Only start with: docker-compose --profile tools up
+
+  # Redis - For caching and rate limiting (optional, for future use)
+  redis:
+    image: redis:7-alpine
+    container_name: athenaeum-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - athenaeum-network
+    profiles:
+      - tools
+
+volumes:
+  timescaledb_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  athenaeum-network:
+    driver: bridge

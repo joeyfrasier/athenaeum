@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Athenaeum TimescaleDB",
+      "Group": "Servers",
+      "Host": "timescaledb",
+      "Port": 5432,
+      "MaintenanceDB": "tsdb",
+      "Username": "tsdbadmin",
+      "SSLMode": "prefer",
+      "PassFile": "/tmp/pgpassfile"
+    }
+  }
+}

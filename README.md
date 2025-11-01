@@ -96,23 +96,32 @@ PostgreSQL with pgvector for semantic search:
 
 ## Quick Start
 
-### Two Setup Options
+### Three Setup Options
 
-**Option 1: TigerData Cloud** (Recommended - Production-Ready) 🚀
-- Managed TimescaleDB optimized for AI agents
+**Option 1: Docker Self-Hosted** (Recommended - 100% Open Source) 🐳
+- TimescaleDB in Docker - same tech as TigerData Cloud
+- 100% open-source, no vendor lock-in
+- Full control over infrastructure
+- Perfect for development and self-hosted production
+- Includes pgAdmin web UI (optional)
+
+👉 **[See Docker Setup Guide](DOCKER_SETUP.md)** for complete instructions
+
+**Option 2: TigerData Cloud** (Managed - Production at Scale) 🚀
+- Fully managed TimescaleDB optimized for AI agents
 - 30-day free trial (no credit card required)
-- Automatic compression, backups, and scaling
-- Built-in pgvector for semantic search
+- Automatic backups, scaling, and monitoring
+- Enterprise support and 99.99% uptime SLA
 - Tiger CLI MCP server for AI assistance
 
-👉 **[See TigerData Setup Guide](TIGERDATA_SETUP.md)** for complete instructions
+👉 **[See TigerData Cloud Setup Guide](TIGERDATA_SETUP.md)** for complete instructions
 
-**Option 2: Local Development**
-- Self-hosted PostgreSQL/TimescaleDB
-- Full control over infrastructure
-- Good for development and testing
+**Option 3: Local PostgreSQL**
+- Bare-metal PostgreSQL/TimescaleDB installation
+- Maximum customization
+- Requires manual configuration
 
-Instructions below are for Option 2 (local). For TigerData, see the [setup guide](TIGERDATA_SETUP.md).
+Instructions below are for Option 3 (bare-metal). For Docker or TigerData Cloud, see their respective guides.
 
 ---
 
@@ -531,7 +540,8 @@ All configuration via environment variables (see `.env.sample`):
 - **Architecture**: See `ARCHITECTURE_ANALYSIS.md`
 - **Implementation Plan**: See `IMPLEMENTATION_PLAN.md`
 - **Testing Strategy**: See `TESTING_STRATEGY.md`
-- **TigerData Integration**: See `TIGERDATA_SETUP.md` ⭐ (Production database setup)
+- **Docker Setup**: See `DOCKER_SETUP.md` 🐳 (Self-hosted with Docker)
+- **TigerData Cloud**: See `TIGERDATA_SETUP.md` ☁️ (Managed cloud database)
 
 ## Acknowledgments
 
