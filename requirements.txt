@@ -5,6 +5,11 @@ pydantic>=2.5.0
 pydantic-ai>=0.0.14
 python-dotenv>=1.0.0
 
+# Marketing Dashboard
+streamlit>=1.29.0
+plotly>=5.18.0
+pandas>=2.1.0
+
 # Database
 sqlalchemy>=2.0.23
 psycopg2-binary>=2.9.9
