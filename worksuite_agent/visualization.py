@@ -1,18 +1,25 @@
 """Helpers for transforming tenant configuration into diagrams."""
 from __future__ import annotations
 
-import re
 from typing import Dict, Iterable, List
 
 from .config_models import ModuleConfig, TenantConfiguration, WorkflowConfig
 
 
 def _mermaid_id(raw: str, prefix: str) -> str:
-    cleaned = re.sub(r"[^0-9a-zA-Z_]", "_", raw)
-    cleaned = re.sub(r"_+", "_", cleaned).strip("_")
-    if cleaned:
-        return f"{prefix}_{cleaned}" if prefix else cleaned
-    return prefix or "node"
+    """Encode identifiers without merging punctuation or Unicode variants."""
+
+    return f"{prefix}_{raw.encode('utf-8').hex() or 'empty'}"
+
+
+def _mermaid_label(raw: str) -> str:
+    """Keep user-provided text inside quoted Mermaid labels."""
+
+    entities = {
+        '"': "#34;", "#": "#35;", "&": "#38;", "<": "#60;", ">": "#62;",
+        "\\": "#92;", "`": "#96;", "\n": "<br/>", "\r": "",
+    }
+    return "".join(entities.get(character, character) for character in raw)
 
 
 class MermaidDiagramBuilder:
@@ -29,12 +36,12 @@ class MermaidDiagramBuilder:
         }
 
     def build_module_overview(self) -> str:
-        tenant_name = self.configuration.tenant.name
+        tenant_name = _mermaid_label(self.configuration.tenant.name)
         tenant_node = _mermaid_id(self.configuration.tenant.tenant_id, "tenant")
         lines = ["%% Worksuite module overview", "graph TD", f"    {tenant_node}[\"{tenant_name}\"]"]
         for module in self.configuration.modules:
             module_node = _mermaid_id(module.module_id, "module")
-            label = f"{module.name}\\n({'Enabled' if module.enabled else 'Disabled'})"
+            label = _mermaid_label(f"{module.name}\n({'Enabled' if module.enabled else 'Disabled'})")
             lines.append(f"    {tenant_node} --> {module_node}[/\"{label}\"/]")
             for dependency in module.dependencies:
                 dependency_node = _mermaid_id(dependency, "module")
@@ -42,44 +49,45 @@ class MermaidDiagramBuilder:
         return "\n".join(lines)
 
     def build_workflow_maps(self) -> str:
-        diagrams: List[str] = []
-        for workflow in self.configuration.workflows:
-            diagrams.append(self._build_workflow_diagram(workflow))
-        return "\n\n".join(diagrams) if diagrams else "%% No workflows configured"
+        if not self.configuration.workflows:
+            return '%% No workflows configured\nflowchart LR\n    no_workflows["No workflows configured"]'
+        groups = [self._build_workflow_group(workflow) for workflow in self.configuration.workflows]
+        return "\n".join(["flowchart LR", *groups])
 
-    def _build_workflow_diagram(self, workflow: WorkflowConfig) -> str:
-        lines = [
-            f"%% Workflow: {workflow.name}",
-            "flowchart LR",
-        ]
+    def _build_workflow_group(self, workflow: WorkflowConfig) -> str:
+        workflow_node = _mermaid_id(workflow.workflow_id, "workflow")
+        step_prefix = f"step_{workflow_node}"
+        lines = [f'    subgraph {workflow_node}["{_mermaid_label(workflow.name)}"]']
         if not workflow.steps:
-            lines.append("    Empty[(No steps configured)]")
+            lines.extend([f"        {workflow_node}_empty[(No steps configured)]", "    end"])
             return "\n".join(lines)
 
         for step in workflow.steps:
-            step_node = _mermaid_id(step.step_id, "step")
+            step_node = _mermaid_id(step.step_id, step_prefix)
+            label = _mermaid_label(f"{step.name}\n{step.action}")
             lines.append(
-                f"    {step_node}[\"{step.name}\\n{step.action}\"]"
+                f"        {step_node}[\"{label}\"]"
             )
         for step in workflow.steps:
-            source_node = _mermaid_id(step.step_id, "step")
+            source_node = _mermaid_id(step.step_id, step_prefix)
             for target in step.next_steps or []:
-                target_node = _mermaid_id(target, "step")
-                lines.append(f"    {source_node} --> {target_node}")
+                target_node = _mermaid_id(target, step_prefix)
+                lines.append(f"        {source_node} --> {target_node}")
+        lines.append("    end")
         return "\n".join(lines)
 
     def build_integration_map(self) -> str:
         if not self.configuration.integrations:
-            return "%% No integrations configured"
+            return '%% No integrations configured\ngraph LR\n    no_integrations["No integrations configured"]'
 
         tenant_node = _mermaid_id(self.configuration.tenant.tenant_id, "tenant")
         lines = [
             "graph LR",
-            f"    {tenant_node}((\"{self.configuration.tenant.name}\"))",
+            f"    {tenant_node}((\"{_mermaid_label(self.configuration.tenant.name)}\"))",
         ]
         for integration in self.configuration.integrations:
             integration_node = _mermaid_id(integration.integration_id, "integration")
-            label = f"{integration.name}\\n{integration.type}"
+            label = _mermaid_label(f"{integration.name}\n{integration.type}")
             lines.append(f"    {tenant_node} --- {integration_node}[\"{label}\"]")
         return "\n".join(lines)
 

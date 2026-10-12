@@ -35,7 +35,10 @@ def build_configuration_from_tables(
     if not tenant_table:
         raise ValueError("Missing tenants table")
 
-    tenant_row = next(iter(tenant_table))
+    try:
+        tenant_row = next(iter(tenant_table))
+    except StopIteration:
+        raise ValueError("Missing tenants table") from None
 
     modules_data = tables.get("modules", [])
     workflows_data = tables.get("workflows", [])
@@ -79,14 +82,18 @@ def build_configuration_from_tables(
     workflows = []
     for row in workflows_data:
         workflow_id = str(row["workflow_id"])
+        step_rows = steps_by_workflow.get(workflow_id, [])
+        step_ids = [str(step_row.get("step_id", idx + 1)) for idx, step_row in enumerate(step_rows)]
+        if len(set(step_ids)) != len(step_ids):
+            raise ValueError(f"Duplicate step IDs in workflow {workflow_id!r}")
         steps = [
             WorkflowStep(
-                step_id=str(step_row.get("step_id", idx + 1)),
+                step_id=step_ids[idx],
                 name=str(step_row.get("name", f"Step {idx+1}")),
                 action=str(step_row.get("action", "")),
                 next_steps=[str(s) for s in step_row.get("next_steps", [])],
             )
-            for idx, step_row in enumerate(steps_by_workflow.get(workflow_id, []))
+            for idx, step_row in enumerate(step_rows)
         ]
         workflows.append(
             WorkflowConfig(

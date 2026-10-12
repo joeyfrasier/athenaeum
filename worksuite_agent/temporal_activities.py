@@ -1,7 +1,7 @@
 """Temporal activities for the Worksuite configuration assistant."""
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Dict
 
 from temporalio import activity
 
@@ -9,24 +9,17 @@ from .config_models import TenantConfiguration
 from .repository import ConfigurationRepository
 from .visualization import MermaidDiagramBuilder
 
-_REPOSITORY: Optional[ConfigurationRepository] = None
+class ConfigurationActivities:
+    """Configuration activities bound to one invocation's repository."""
 
+    def __init__(self, repository: ConfigurationRepository):
+        self._repository = repository
 
-def configure_repository(repository: Optional[ConfigurationRepository]) -> None:
-    """Configure the repository used by activities when running under Temporal."""
+    @activity.defn
+    async def load_configuration_activity(self, tenant_id: str) -> TenantConfiguration:
+        """Load tenant configuration from this worker's repository."""
 
-    global _REPOSITORY
-    _REPOSITORY = repository
-
-
-@activity.defn
-async def load_configuration_activity(tenant_id: str) -> TenantConfiguration:
-    """Load tenant configuration data from the configured repository."""
-
-    if _REPOSITORY is None:  # pragma: no cover - guard for misconfiguration
-        raise RuntimeError("Repository not configured for activities")
-    configuration = _REPOSITORY.load_configuration(tenant_id)
-    return configuration
+        return self._repository.load_configuration(tenant_id)
 
 
 @activity.defn
