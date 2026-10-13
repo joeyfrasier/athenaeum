@@ -192,6 +192,73 @@ pool.start()
 pool.run_forever()  # Blocks until shutdown signal
 ```
 
+## Worksuite SE Assistant prototype
+
+The repository also includes a Streamlit prototype for the Worksuite Solution Engineering (SE) Assistant.
+It reads tenant configuration exports and generates Mermaid diagrams through local execution or Temporal
+workflows, independently of the Slack agent and PostgreSQL setup above.
+
+### Features
+
+- **Temporal orchestration**: Workflows and activities use [`temporalio`](https://python.temporal.io/), with a
+  synchronous local helper for the demo.
+- **Configuration ingestion**: Load table-shaped JSON exports or use the bundled sample dataset.
+- **Diagram generation**: Build module, workflow, and integration diagrams in Mermaid format.
+- **Streamlit UI**: Upload configuration exports, inspect a summary, and copy Mermaid diagrams.
+
+### Running the prototype locally
+
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+The prototype runs locally without Slack credentials, PostgreSQL, or a Temporal server. Custom uploads must
+be a JSON object mapping each Worksuite table name to an array of rows, including a non-empty `tenants`
+array. See [`worksuite_agent/examples/sample_data.py`](worksuite_agent/examples/sample_data.py) for an example.
+The in-memory repository assumes the export is already scoped to the intended tenant.
+Within each workflow, explicit step IDs and numeric defaults for omitted IDs must be unique; ambiguous
+exports produce a validation error before diagram generation.
+
+### Temporal integration
+
+The Streamlit demo calls `generate_diagrams_locally`. To run the same diagram logic through a running
+Temporal server, call `run_workflow` with a configuration repository:
+
+Each call starts its own repository-bound worker on a unique queue with the `worksuite-assistant-`
+prefix and a unique workflow ID. Overlapping calls therefore keep their tenant exports separate.
+
+```python
+import asyncio
+
+from worksuite_agent.examples.sample_data import SAMPLE_TABLES
+from worksuite_agent.orchestration import run_workflow
+from worksuite_agent.repository import InMemoryConfigurationRepository
+
+
+async def main():
+    diagrams = await run_workflow(
+        temporal_address="localhost:7233",
+        tenant_id="tenant-123",
+        repository=InMemoryConfigurationRepository(SAMPLE_TABLES),
+    )
+    print(diagrams)
+
+
+asyncio.run(main())
+```
+
+For database-backed ingestion, implement `ConfigurationRepository.load_configuration` or
+`TabularConfigurationRepository.load_tables` and scope its results to the requested tenant.
+
+### Prototype regression tests
+
+The repository and local diagram tests use synthetic data and need no external services:
+
+```bash
+python -m unittest discover -s tests/unit -p 'test_worksuite_*.py' -v
+```
+
 ## Project Structure
 
 ```
